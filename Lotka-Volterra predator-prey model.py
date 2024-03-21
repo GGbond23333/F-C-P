@@ -77,10 +77,3 @@ else:
         filename = f'lotka_volterra_alpha_{args.alpha[idx]}.png'
         plt.savefig(filename)
         print(f'Saved plot to {filename}')
-
-
-
-
-
-
-

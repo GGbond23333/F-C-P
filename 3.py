@@ -67,3 +67,11 @@ plt.show()
 
 if __name__ == '__main__':
     main()
+
+
+
+
+segments = [1,2,3,4,5,6,7,8
+]
+A = segments[:7]
+print(A)

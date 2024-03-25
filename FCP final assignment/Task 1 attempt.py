@@ -7,27 +7,27 @@ import matplotlib.pyplot as plt
 def calculate_agreement(population, row, col, external):
 
     # Finding the number of rows and columns from the population matrix
-    n_rows, n_cols = population.shape
+    numberRows, numberCols = population.shape
 
     # Finds the coordinates of the neighbours of a given position in the matrix
     neighbors = [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]
 
     # Sets initial total_agreement to 0 for a given cell
-    total_agreement = 0
+    totalAgreement = 0
 
     # Nested loop which calculates change_in_agreement
     for r, c in neighbors:
-        if 0 <= r < n_rows and 0 <= c < n_cols:     # Ensures that neighbour is within bounds of grid (this is for positions on the edge of the grid)
-            total_agreement += population[row, col] * population[r, c]  # Calculates agreement between current cell and one neighbour then sums it to total_agreement
-    change_in_agreement = total_agreement + external * population[row, col]  # Calculates the change_in_agreement by summing the total_agreement with the external pull
-    return change_in_agreement
+        if 0 <= r < numberRows and 0 <= c < numberCols:     # Ensures that neighbour is within bounds of grid (this is for positions on the edge of the grid)
+            totalAgreement += population[row, col] * population[r, c]  # Calculates agreement between current cell and one neighbour then sums it to total_agreement
+    changeInAgreement = totalAgreement + external * population[row, col]  # Calculates the change_in_agreement by summing the total_agreement with the external pull
+    return changeInAgreement
 
 
 # This function performs a single update of the model
 def ising_step(population, alpha, external=0.0):
-    n_rows, n_cols = population.shape
-    row = np.random.randint(0, n_rows)
-    col = np.random.randint(0, n_cols)
+    numberRows, numberCols = population.shape
+    row = np.random.randint(0, numberRows)
+    col = np.random.randint(0, numberCols)
 
     agreement = calculate_agreement(population, row, col, external)
 
@@ -102,5 +102,5 @@ def test_ising():
 # Running the code
 # test_ising()
 
-initial_population = np.random.choice([-1, 1], size=(100, 100))
-ising_main(initial_population, alpha=0.01, external=0)
+initial_population = np.random.choice([-1, 1], size=(100, 100))  # Randomly generates a 100x100 grid containing 1s and -1s 
+ising_main(initial_population, alpha=0.01, external=0)  # Runs the main function with a given alpha and external value 

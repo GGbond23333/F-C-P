@@ -47,7 +47,7 @@ class SmallWorldNetwork:
         plt.show()
 
 
-# Example usage
+# Example
 if __name__ == "__main__":
     N = 10
     k = 2

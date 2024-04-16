@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>T.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+T.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">machine </span><span class="s0">import </span><span class="s1">Pin</span>
+<span class="s0">from </span><span class="s1">utime </span><span class="s0">import </span><span class="s1">sleep</span>
+
+<span class="s2"># Initialise GPIO pins for seven-segment display</span>
+<span class="s1">count = </span><span class="s3">0</span>
+<span class="s1">pins = [Pin(i</span><span class="s0">, </span><span class="s1">Pin.OUT) </span><span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range(</span><span class="s3">1</span><span class="s0">, </span><span class="s3">15</span><span class="s1">)]  </span><span class="s2"># Using GPIO 1 to 14</span>
+
+<span class="s2"># Seven-segment LED code corresponding to numbers 0-9, excluding decimal points</span>
+<span class="s1">digit_codes = [</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 0</span>
+    <span class="s1">[</span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 1</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 2</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 3</span>
+    <span class="s1">[</span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 4</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 5</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 6</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 7</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 8</span>
+    <span class="s1">[</span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">1</span><span class="s0">, </span><span class="s3">1</span><span class="s1">]</span><span class="s0">,  </span><span class="s2"># 9</span>
+<span class="s1">]</span>
+
+
+<span class="s0">def </span><span class="s1">display_digit(position</span><span class="s0">, </span><span class="s1">number):</span>
+    <span class="s1">code = digit_codes[number]</span>
+    <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range(</span><span class="s3">7</span><span class="s1">):</span>
+        <span class="s1">pins[position * </span><span class="s3">7 </span><span class="s1">+ i].value(code[i])</span>
+
+
+<span class="s0">def </span><span class="s1">display_number(number):</span>
+    <span class="s1">tens = number // </span><span class="s3">10</span>
+    <span class="s1">ones = number % </span><span class="s3">10</span>
+    <span class="s1">display_digit(</span><span class="s3">0</span><span class="s0">, </span><span class="s1">tens)  </span><span class="s2"># Show decimal places</span>
+    <span class="s1">display_digit(</span><span class="s3">1</span><span class="s0">, </span><span class="s1">ones)  </span><span class="s2"># Show single digit</span>
+
+
+<span class="s0">def </span><span class="s1">myISR(pin):</span>
+    <span class="s0">global </span><span class="s1">count</span>
+    <span class="s1">count += </span><span class="s3">1</span>
+    <span class="s0">if </span><span class="s1">count &gt;= </span><span class="s3">100</span><span class="s1">:</span>
+        <span class="s1">count = </span><span class="s3">0</span>
+    <span class="s1">display_number(count)</span>
+
+
+<span class="s2"># Initialise GPIO pins used for detection</span>
+<span class="s1">check = Pin(</span><span class="s3">18</span><span class="s0">, </span><span class="s1">Pin.IN</span><span class="s0">, </span><span class="s1">Pin.PULL_DOWN)</span>
+
+
+<span class="s0">def </span><span class="s1">main():</span>
+    <span class="s1">display_number(</span><span class="s3">0</span><span class="s1">)  </span><span class="s2"># Initial display 0</span>
+    <span class="s0">while True</span><span class="s1">:</span>
+        <span class="s1">check.irq(handler=myISR</span><span class="s0">, </span><span class="s1">trigger=Pin.IRQ_RISING)</span>
+        <span class="s1">sleep(</span><span class="s3">0.1</span><span class="s1">)</span>
+
+
+<span class="s0">if </span><span class="s1">__name__ == </span><span class="s4">&quot;__main__&quot;</span><span class="s1">:</span>
+    <span class="s1">main()</span>
+</pre>
+</body>
+</html>

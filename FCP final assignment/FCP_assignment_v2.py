@@ -28,6 +28,7 @@ class Network:
 
 	def get_mean_clustering(self):
 		# Calculate the mean clustering coefficient for the network.
+		global mean_clustering
 		clustering_coefficients = []
 
 		for node in self.nodes:
@@ -59,6 +60,7 @@ class Network:
 
 	def get_mean_path_length(self):
 		# Calculate the mean path length across all nodes using a breadth-first search (BFS) approach.
+		global mean_path_length
 		total_path_lengths = 0
 		total_paths = 0
 
@@ -155,15 +157,18 @@ class Network:
 		return num_rewired  # Return the total number of rewiring
 
 	def plot(self):
-
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
 		ax.set_axis_off()
 
 		num_nodes = len(self.nodes)
 		network_radius = num_nodes * 10
-		ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])
-		ax.set_ylim([-1.1 * network_radius, 1.1 * network_radius])
+		buffer = 0.1 * network_radius if network_radius != 0 else 1  # 添加一个条件，确保不为零
+
+		# 设置x轴的左右限制，并确保两者不相同，通过添加一个小的缓冲区。
+		ax.set_xlim([-1.1 * network_radius - buffer, 1.1 * network_radius + buffer])
+		# 同样的策略用于y轴
+		ax.set_ylim([-1.1 * network_radius - buffer, 1.1 * network_radius + buffer])
 
 		for (i, node) in enumerate(self.nodes):
 			node_angle = i * 2 * np.pi / num_nodes
@@ -181,6 +186,12 @@ class Network:
 
 					ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
 		plt.show()
+
+	def get_path_length(self):
+		pass
+
+	def get_clustering(self):
+		pass
 
 
 def test_networks():
@@ -249,7 +260,7 @@ def calculate_agreement(population, row, col, external=0.0):
 			change_in_agreement (float)
 	"""
 
-	# Your code for task 1 goes here
+	# Your code for task goes here
 	return np.random.random() * population
 	pass
 
@@ -269,7 +280,7 @@ def ising_step(population, external=0.0):
 
 	if agreement < 0:
 		population[row, col] *= -1
-	# Your code for task 1 goes here
+	# Your code for task goes here
 	pass
 
 
@@ -350,53 +361,53 @@ This section contains code for the main function- you should write some code for
 
 
 def main():
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-network', type=int, help='Create and plot a random network of the specified size')
-	parser.add_argument('-ring_network', type=int, help='Create and plot a ring network of the specified size')
-	parser.add_argument('-small_world', type=int, help='Create and plot a small world network of the specified size')
-	parser.add_argument('-re_wire', type=float, default=0.2, help='Re-wiring probability for small world network')
-	parser.add_argument('-test_networks', action='store_true', help='Run the test functions')
+	# Create an argparser object
+	parser = argparse.ArgumentParser(description="Create and plot different types of networks.")
+
+	# Define arguments
+	parser.add_argument('--type', type=str, choices=['ring', 'small_world', 'random'], default='random',
+	                    help='Type of network to create')
+	parser.add_argument('--nodes', type=int, default=10, help='Number of nodes in the network')
+	parser.add_argument('--connection_probability', type=float, default=0.5,
+	                    help='Connection probability for random network')
+	parser.add_argument('--neighbour_range', type=int, default=1,
+	                    help='Neighbour range for ring network')
+	parser.add_argument('--re_wire_prob', type=float, default=0.2,
+	                    help='Rewire probability for small world network')
+	parser.add_argument('--test_network', action='store_true', help='Run predefined network tests')
+
+	# Parse arguments
 	args = parser.parse_args()
 
-	if args.network:
-		N = args.network
-		connection_probability = 0.5
-		network = Network()
-		network.make_random_network(N, connection_probability)
-		print(f"Mean degree: {network.get_mean_degree()}")
-		print(f"Average path length: {network.get_mean_path_length()}")
-		print(f"Clustering co-efficient: {network.get_mean_clustering()}")
-		network.plot()
-		plt.show()
-	if args.ring_network:
-		N = args.ring_network
-		network = Network()
-		network.make_ring_network(N)
-		print(f"Mean degree: {network.get_mean_degree()}")
-		print(f"Average path length: {network.get_mean_path_length()}")
-		print(f"Clustering co-efficient: {network.get_mean_clustering()}")
-		network.plot()
-		plt.show()
+	# Create the network object
+	network = Network()
 
-	if args.small_world:
-		N = args.small_world
-		rewire_probability = args.re_wire
-		network = Network()
-		network.make_small_world_network(N, re_wire_prob=rewire_probability)
+	# Determine which type of network to create based on the type argument
+	if args.type == 'ring':
+		network.make_ring_network(args.nodes, args.neighbour_range)
+	elif args.type == 'small_world':
+		network.make_small_world_network(args.nodes, args.re_wire_prob)
+	elif args.type == 'random':
+		network.make_random_network(args.nodes, args.connection_probability)
+
+	# Plot the created network
+	network.plot()
+
+	# Calculate and print metrics if the network flag is provided
+	if args.test_network:
+		test_networks()  # Ensure this function is defined somewhere in your code
+	else:
+		# Assuming you always want to print metrics unless it's a test run
 		print(f"Mean degree: {network.get_mean_degree()}")
 		print(f"Average path length: {network.get_mean_path_length()}")
-		print(f"Clustering co-efficient: {network.get_mean_clustering()}")
-		network.plot()
-		plt.show()
-
-	if args.test_networks:
-		test_networks()
+		print(f"Clustering coefficient: {network.get_mean_clustering()}")
 
 
 if __name__ == "__main__":
 	main()
 
-networkT = Network()
-networkT.make_small_world_network(10, 0.3)
-networkT.plot()
-print(networkT.make_small_world_network(10, 1))
+
+# networkT = Network()
+# networkT.make_small_world_network(10, 0.1)
+# networkT.plot()
+# print(networkT.make_small_world_network(10, 1))

@@ -39,7 +39,7 @@ class Network:
                 connections[left_neighbour] = 1  # Connect to left neighbour
             self.nodes.append(Node(np.random.random(), i, connections))
 
-    def make_small_world_network(self, N, re_wire_prob=0.2):
+    def make_small_world_network(self, N, re_wire_prob):
         """
         Transforms a ring network into a small-world network by randomly rewiring connections
         with a specified probability.
@@ -72,12 +72,7 @@ class Network:
 
         return num_rewired  # Return the total number of rewiring
 
-    def plot(self):
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.set_axis_off()
-
+    def plot(self, ax):  # The plot method has been slightly modified so that it now takes ax as an input
         num_nodes = len(self.nodes)
         network_radius = num_nodes * 10
         ax.set_xlim([-1.1 * network_radius, 1.1 * network_radius])
@@ -116,27 +111,30 @@ def calculateAgreementOnNetwork(node, nodes, external):  # Function calculates t
 
 def isingStepOnNetwork(network, alpha, external):  # Performs a single step of the model
     node = network.nodes[np.random.randint(len(network.nodes))]  # Randomly select a node within the network. This is an exclusive function which ensures that a non-existent node isn't selected
-    agreement = calculateAgreementOnNetwork(node, network.nodes, external)  # Calculates agreement
+    agreement = calculateAgreementOnNetwork(node, network.nodes, external)  # Calculates change in agreement
     if agreement < 0 or np.random.rand() < np.exp(-2 * agreement / alpha):  # np.random.rand() generates a random float between 0 and 1. if the probability function is less than this value, a flip occurs. If agreement < 0 a flip occurs
         node.value *= -1
 
 
-# This function will run the Ising model simulation on a network
 def isingMainOnNetwork(network, alpha, external):  # Actually runs the model
-    for frame in range(100):  # Loop runs for the specified number of frames [100 frames]
 
+    ax = plt.figure().add_subplot()  # Create figure and add a default subplot to it
+
+    for frame in range(100):  # Loop runs for the specified number of frames [100 frames]
         for step in range(1000):  # Iterate single steps 1000 times to form an update
             isingStepOnNetwork(network, alpha, external)
 
-        network.plot()  # Plots current network frame [plots every 1000 steps]
-        plt.pause(0.5)  # Pauses the plot for .5s
-        plt.close()  # Closes the current plot
+        ax.clear()  # Clears current content off of the plot - this results in faster execution as previous plots aren't stored
+        ax.set_axis_off()  # Clears the axis
+        network.plot(ax)  # Plots current network frame [plots every 1000 steps]
+        plt.pause(0.1)  # Pauses the plot for .1s without closing it
+
+    plt.show()  # Keep final frame open
 
 
 def main():
-    N = 20  # Number of nodes
     network = Network()  # Creates an instance of the Network class
-    network.make_small_world_network(N)  # Creates small world network [obv can be changed but, I used this for testing]
+    network.make_small_world_network(100, 0.2)  # Creates small world network [obv can be changed but, I used this for testing]
 
     alpha = 10  # Set alpha value
     external = 0.1  # Set external value

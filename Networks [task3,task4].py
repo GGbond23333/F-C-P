@@ -92,15 +92,23 @@ class Network:
                     self.nodes[j].connections[i] = 1
 
     def make_ring_network(self, N, neighbour_range=1):
-        self.nodes = []
-        for i in range(N):
-            connections = [0] * N
-            for j in range(1, neighbour_range + 1):
-                right = (i + j) % N
-                left = (i - j + N) % N
-                connections[right] = 1
-                connections[left] = 1
-            self.nodes.append(Node(np.random.random(), i, connections))
+		"""
+		Initializes a ring network with N nodes. Each node is connected to its immediate neighbours
+		specified by the neighbour_range on both sides.
+
+		Args:
+		- N (int): Number of nodes in the network
+		- neighbour_range (int): Number of adjacent neighbours each node is connected to on both sides
+		"""
+		self.nodes = []  # Resetting nodes to an empty list for new network
+		for i in range(N):
+			connections = [0] * N  # Initialize connections for current node with no connections
+			for j in range(1, neighbour_range + 1):
+				right_neighbour = (i + j) % N  # Circular index for right neighbour
+				left_neighbour = (i - j + N) % N  # Circular index for left neighbour using modulo
+				connections[right_neighbour] = 1  # Connect to right neighbour
+				connections[left_neighbour] = 1  # Connect to left neighbour
+			self.nodes.append(Node(np.random.random(), i, connections))
 
     def make_small_world_network(self, N, re_wire_prob=0.2):
         """

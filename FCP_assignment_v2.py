@@ -402,7 +402,7 @@ def main():
 
 	# Calculate and print metrics if the network flag is provided
 	if args.test_network:
-		test_networks()  # Ensure this function is defined somewhere in your code
+		test_networks()
 	else:
 		# Assuming you always want to print metrics unless it's a test run
 		print(f"Mean degree: {network.get_mean_degree()}")

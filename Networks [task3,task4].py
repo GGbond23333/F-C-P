@@ -217,8 +217,8 @@ def main():
     parser = argparse.ArgumentParser(description="Create and plot different types of networks.")
 
     # Network Arguments
-    parser.add_argument('-type', type=str, choices=['ring', 'small_world', 'random'], default='random', help='Type of network to create')
-    parser.add_argument('-nodes', type=int, default=10, help='Number of nodes in the network')
+    parser.add_argument('type', type=str, choices=['ring', 'small_world', 'random'], default='random', help='Type of network to create')
+    parser.add_argument('nodes', type=int, default=10, help='Number of nodes in the network')
     parser.add_argument('-connection_probability', type=float, default=0.5, help='Connection probability for random network')
     parser.add_argument('-neighbour_range', type=int, default=1, help='Neighbour range for ring network')
     parser.add_argument('-re_wire_prob', type=float, default=0.2, help='Rewire probability for small world network')

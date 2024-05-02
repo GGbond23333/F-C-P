@@ -449,7 +449,7 @@ def test_defuant(grid,threshold,beta):     #this function tests certain aspects 
         assert abs(grid[i] - grid[i + 1]) < 1
     assert abs(grid[99]-grid[98])<1
     assert abs(grid[99]-grid[0])<1
-
+    print("Tests passed") 
 '''
 ==============================================================================================================
 This section contains code for the Ising Model Network implementation - Task 5

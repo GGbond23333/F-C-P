@@ -568,7 +568,7 @@ def main():
     parser.add_argument("-external", type=float, default=0.0, help='Set a value for the external factor')
     parser.add_argument("-alpha", type=float, default=1.0, help='Set a value for alpha')
     # Ising Model on a Network Arguments
-    parser.add_argument("-use_network", type=int, help='Run Ising Model on a small world network with N nodes.')
+    parser.add_argument("-use_network", type=int, nargs='?', const=100, help='Run Ising Model on a small world network with N nodes.')
     # Defuant Model Arguments
     parser.add_argument('-defuant', action='store_true', help="Simulate the Defuant model.")
     parser.add_argument('-beta', type=float, default=0.2, help='Set the coupling parameter.')

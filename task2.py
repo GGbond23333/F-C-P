@@ -98,6 +98,7 @@ def test_defuant(grid,threshold,beta):     #this function tests certain aspects 
         assert abs(grid[i] - grid[i + 1]) < 1
     assert abs(grid[99]-grid[98])<1
     assert abs(grid[99]-grid[0])<1
+    print("Tests passed")
     
 
 def main(): #this function ties everything together and uses arguement parsers to change the coupling and threshold parameters and choose which function to run

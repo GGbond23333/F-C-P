@@ -38,9 +38,9 @@ The script is designed to be run from the command line with various flags to con
 	-test_defuant: Tests the Defuant models opinion dynamics
 
 Example Commands:
-python3 assignment.py -small_world 100 -re_wire_prob 0.1 -ising_model -alpha 0.5 -external 1.0
-python3 assignment.py -ising_model -use_network
-Python3 assignment.py -defuant -beta 0.1 -threshold 0.3
+python3 assignment.py -ising_model -use_network 50 -re_wire_prob 0.3 (Ising model simulation on a small world network with 50 nodes and a rewire probability of 0.3)
+python3 assignment.py -defuant -beta 0.1 -threshold 0.3 (Defuant model simulation with a beta value of 0.1 and threshold value of 0.3)
+python3 assignment.py -ring_network 70 (Creates a ring network with 70 nodes) 
 
 
 Required Libraries:

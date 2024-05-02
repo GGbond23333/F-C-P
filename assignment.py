@@ -14,12 +14,14 @@ class Node:
 
 class Network:
 
-    def __init__(self, nodes=None):
+    def __init__(self, nodes=None, is_ising=False):
 
         if nodes is None:
             self.nodes = []
         else:
             self.nodes = nodes
+
+        self.is_ising = is_ising  # "Is the ising model being used"
 
     def get_mean_degree(self):
         # Calculate the mean degree by summing up all node degrees and dividing by the number of nodes.
@@ -115,7 +117,7 @@ class Network:
 
     def make_ring_network(self, N, neighbour_range=1):
         """
-        Initializes a ring network with N nodes. Each node is connected to its immediate neighbours
+        Initialises a ring network with N nodes. Each node is connected to its immediate neighbours
         specified by the neighbour_range on both sides.
 
         Args:
@@ -125,7 +127,7 @@ class Network:
 
         self.nodes = []  # Resetting nodes to an empty list for new network
         for i in range(N):
-            connections = [0] * N  # Initialize connections for current node with no connections
+            connections = [0] * N  # Initialise connections for current node with no connections
             for j in range(1, neighbour_range + 1):
                 right_neighbour = (i + j) % N  # Circular index for right neighbour
                 left_neighbour = (i - j + N) % N  # Circular index for left neighbour using modulo
@@ -133,7 +135,7 @@ class Network:
                 connections[left_neighbour] = 1  # Connect to left neighbour
             self.nodes.append(Node(np.random.random(), i, connections))
 
-    def make_small_world_network(self, N, re_wire_prob=0.2):
+    def make_small_world_network(self, N, re_wire_prob=0.2, is_ising=False):
         """
         Transforms a ring network into a small-world network by randomly rewiring connections
         with a specified probability.
@@ -141,13 +143,20 @@ class Network:
         Args:
         - N (int): Number of nodes in the network
         - re_wire_prob (float): Probability of rewiring each edge
+        - is_ising (boolean): Checks if the network is being created for use as an Ising simulation
 
         Returns:
         - int: Number of connections that were rewired
         """
 
-        self.make_ring_network(N)  # Start by creating a ring network
+        self.is_ising = is_ising
+        self.make_ring_network(N)  # Start with a ring network
         for i, node in enumerate(self.nodes):
+            # Node initialisation for Ising model
+            if is_ising:
+                node.value = np.random.choice([-1, 1])
+            else:
+                node.value = np.random.random()  # Original random float initialisation
             for j in range(len(node.connections)):
                 if node.connections[j] == 1 and np.random.random() < re_wire_prob:
                     node.connections[j] = 0  # Disconnect the current node from its neighbour
@@ -177,21 +186,22 @@ class Network:
             node_x = network_radius * np.cos(node_angle)
             node_y = network_radius * np.sin(node_angle)
 
-            """
-            cm.hot is a colour map that starts of at black (for low values) and through to white (for high values)
-            In between black and white is red (closer to black) and yellow (closer to white).
-            This is useful for implementing the ising model on a network as we can visually see the difference 
-            in colour between two nodes which we can understand as the agreement between two nodes
-            """
-            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes, color=cm.hot(node.value))
+            if self.is_ising:  # Check if network is being used for the Ising model
+                colour = 'red' if node.value == 1 else 'blue'  # Use red for 1 (FOR), blue for -1 (AGAINST)
+            else:
+                colour = cm.hot(node.value)  # For non-Ising use, values are floats between 0 and 1
+
+            circle = plt.Circle((node_x, node_y), 0.3 * num_nodes, color=colour)
             ax.add_patch(circle)
 
+            # Draw lines between connected nodes
             for neighbour_index in range(i + 1, num_nodes):
                 if node.connections[neighbour_index]:
                     neighbour_angle = neighbour_index * 2 * np.pi / num_nodes
                     neighbour_x = network_radius * np.cos(neighbour_angle)
                     neighbour_y = network_radius * np.sin(neighbour_angle)
 
+                    # Plot line between current node and its neighbour
                     ax.plot((node_x, neighbour_x), (node_y, neighbour_y), color='black')
 
 
@@ -372,6 +382,8 @@ def ising_main(population, alpha, external):
             ising_step(population, alpha, external)
         plot_ising(im, population)
 
+    plt.show()
+
 
 '''
 ==============================================================================================================
@@ -537,12 +549,12 @@ def isingMainOnNetwork(network, alpha, external):
         for step in range(1000):  # Iterate single steps 1000 times to form an update
             isingStepOnNetwork(network, alpha, external)
 
-        ax.clear()  # Clears current content off of the plot - this results in faster execution as previous plots aren't stored
+        ax.clear()  # Clears current content off of the plot - this results in faster execution as previous plots aren't stored (reducing lag)
         ax.set_axis_off()  # Clears the axis
         network.plotNetwork(ax)  # Plots current network frame [plots every 1000 steps]
-        plt.pause(0.1)  # Pauses the plot for .1s without closing it
+        plt.pause(0.1)
 
-    plt.show()  # Keep final frame open
+    plt.show()
 
 
 '''
@@ -586,16 +598,17 @@ def main():
 
     # Processing Ising Model Network flag
     if args.use_network:
+        is_ising = True  # We're using the network specifically for the Ising model
         network = Network()
-        network.make_small_world_network(args.use_network, args.connection_probability)
+        network.make_small_world_network(args.use_network, args.connection_probability, is_ising)
         isingMainOnNetwork(network, args.alpha, args.external)
         return
-
     # Processing defuant model
     if args.defuant:
         defuant_main(grid, args.threshold, args.beta)
     elif args.test_defuant:
         test_defuant(grid, args.threshold, args.beta)
+        return
 
     # Processing all other flags
     network = None

@@ -1,8 +1,6 @@
 Ovrview
 The script defines and manages networks, simulating three different models: the Ising Model, Deffuant Model, and Ising Model on Networks. It includes a system for creating and interacting with networks (e.g., random, ring, and small world networks), computing network metrics (e.g., mean degree, clustering coefficient), and plotting network structures. The script also allows testing and validating these models through predefined test functions.
 
-Structure
-Network Classes: Node and Network classes manage nodes and networks, respectively, with functions to compute mean degree, clustering coefficient, and path lengths.
 Model Simulations:
 Ising Model: Simulates magnetic alignment using Ising Model principles.
 Deffuant Model: Simulates opinion formation based on the proximity of initial opinions.

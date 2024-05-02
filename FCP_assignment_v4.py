@@ -81,8 +81,7 @@ class Network:
                     if is_connected:  # Insures node is actually connected
                         neighbor = self.nodes[i]  # Get the neighbouring node
                         if neighbor not in visited:  # Insures that neighbouring node has not already been visited
-                            queue.append((neighbor,
-                                          distance + 1))  # Adds neighbour and updated distance to the tail of the queue
+                            queue.append((neighbor, distance + 1))  # Adds neighbour and updated distance to the tail of the queue
                             visited.add(neighbor)  # Mark neighbour as visited
                             distances[neighbor] = distance + 1  # Add the distance to the dictionary
                             total_path_lengths += distance + 1  # Add distance to sum of path lengths variable
@@ -407,14 +406,15 @@ This section contains code for the main function- you should write some code for
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Create and plot different types of networks.")  # Create arg parser object
-
+    # Create arg parser object
+    parser = argparse.ArgumentParser(description="Create and plot different types of networks.")
     # Network Arguments
     parser.add_argument('-network', type=int, nargs='?', const=10, help='Create a random network')
     parser.add_argument('-ring_network', type=int, nargs='?', const=10, help='Create a ring network')
     parser.add_argument('-small_world', type=int, nargs='?', const=10, help='Create a small world network')
     parser.add_argument('-re_wire_prob', type=float, default=0.2, help='Rewire probability for small world network')
-    parser.add_argument('-connection_probability', type=float, default=0.2, help='Connection probability for random network')
+    parser.add_argument('-connection_probability', type=float, default=0.2,
+                        help='Connection probability for random network')
     parser.add_argument('-test_network', action='store_true', help='Run predefined network tests')
     # Ising Model Arguments
     parser.add_argument("-ising_model", action="store_true", help='Run Ising Model with default parameters')
@@ -422,7 +422,9 @@ def main():
     parser.add_argument("-external", type=float, default=0.0, help='Set a value for the external factor')
     parser.add_argument("-alpha", type=float, default=1.0, help='Set a value for alpha')
     # Ising Model on a Network
-    parser.add_argument("-use_network", type=int, help='Run Ising Model on a small world network with N nodes')  # IDK if it is required to make it run on all networks
+    parser.add_argument("-use_network", type=int,
+                        help='Run Ising Model on a small world network with N nodes')
+    # IDK if it is required to make it run on all networks
 
     args = parser.parse_args()
 

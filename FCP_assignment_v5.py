@@ -349,11 +349,6 @@ This section contains code for the Defuant Model - task 2 in the assignment
 ==============================================================================================================
 '''
 
-import numpy as np
-import matplotlib.pyplot as plt
-import argparse
-#importing the relevant packages for this task
-
 grid = []
 count = 0
 size = 100
@@ -422,8 +417,6 @@ def defuant_main_opinion(grid,threshold,beta):
                     #Lines 48-70 will do the same task however for the special case of i = 99 since i+1 should be zero
                     #but this cannot be defined in the previous if statement so I created a separate one.
     return grid
-
-
 
 
 def defuant_main(grid,threshold,beta):
@@ -535,7 +528,7 @@ def main():
         return
     
   #Processing defuant model
-    if  args.defuant:
+    if args.defuant:
         defuant_main(grid,args.threshold,args.beta)
     elif args.test_defuant:
         test_defuant(grid,args.threshold,args.beta)

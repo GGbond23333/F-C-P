@@ -22,7 +22,6 @@ class Network:
 			self.nodes = nodes
 
 	def get_mean_degree(self):
-		# Your code for task 3 goes here
 		# Calculate the mean degree by summing up all node degrees and dividing by the number of nodes.
 		total_degrees = sum(sum(i.connections) for i in self.nodes)
 		mean_degrees = total_degrees / len(self.nodes) if self.nodes else 0
@@ -65,12 +64,9 @@ class Network:
 		total_paths = 0  # Initialise variable which will store the total number of paths
 
 		for start_node in self.nodes:  # Initiate the breadth-first search which will loop over and use each node as the starting node
-			queue = [(start_node,
-			          0)]  # Initialise the queue for the breadth-first search with the start node (with a distance of 0 from itself)
-			visited = {
-				start_node}  # Keeps track of all visited nodes so that a search is not initiated from a given node twice
-			distances = {
-				start_node: 0}  # Initialise dictionary which will store distance from the current start node to other nodes
+			queue = [(start_node, 0)]  # Initialise the queue for the breadth-first search with the start node (with a distance of 0 from itself)
+			visited = {start_node}  # Keeps track of all visited nodes so that a search is not initiated from a given node twice
+			distances = {start_node: 0}  # Initialise dictionary which will store distance from the current start node to other nodes
 
 			while queue:  # Creates a loop which runs until queue is empty
 				# Assigns "current_node" to the node that is first in the queue, assigns "distance" to distance from start node, pops the first item in the queue off
@@ -263,10 +259,8 @@ def calculate_agreement(population, row, col, external):
 	# Nested loop which calculates change_in_agreement
 	for r, c in neighbors:
 		if 0 <= r < numberRows and 0 <= c < numberCols:  # Ensures that neighbour is within bounds of grid (this is for positions on the edge of the grid)
-			totalAgreement += population[row, col] * population[
-				r, c]  # Calculates agreement between current cell and one neighbour then sums it to total_agreement
-	changeInAgreement = totalAgreement + external * population[
-		row, col]  # Calculates the change_in_agreement by summing the total_agreement with the external pull
+			totalAgreement += population[row, col] * population[r, c]  # Calculates agreement between current cell and one neighbour then sums it to total_agreement
+	changeInAgreement = totalAgreement + external * population[row, col]  # Calculates the change_in_agreement by summing the total_agreement with the external pull
 	return changeInAgreement
 
 

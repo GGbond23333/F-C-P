@@ -29,7 +29,7 @@ Testing:
 -test_defuant: Tests the Deffuant Model's opinion dynamics.
 
 Example Command
-python script_name.py -small_world 100 -re_wire_prob 0.1 -ising_model -alpha 0.5 -external 1.0
+python FCP_assignment_v6.py -small_world 100 -re_wire_prob 0.1 -ising_model -alpha 0.5 -external 1.0
 This command sets up a small world network of 100 nodes with a rewire probability of 0.1, then runs the Ising Model on this network with specific model parameters.
 
 Important Notes
